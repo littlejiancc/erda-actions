@@ -53,7 +53,8 @@ func Run() error {
 		}
 	}
 	log.AddNewLine(1)
-	logrus.Infof("msg=\"deploy starting... ##to_link:applicationId:%d,runtimeId:%d,deploymentId:%d\"",
+	// add msg because of frontend will match regularly, the regular is msg=\"(.+)\"
+ 	logrus.Infof("msg=\"deploy starting... ##to_link:applicationId:%d,runtimeId:%d,deploymentId:%d\"",
 		result.ApplicationId, result.RuntimeId, result.DeploymentId)
 
 	//Set default deployment timeout is 24h.

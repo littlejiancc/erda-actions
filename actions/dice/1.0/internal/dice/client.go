@@ -52,12 +52,12 @@ func (req *deployRequest) print() {
 	log.AddNewLine(1)
 	logrus.Infof("request deploy body: ")
 	logrus.Infof(" clusterName: %s", req.ClusterName)
-	logrus.Infof(" Name: %s", req.Name)
-	logrus.Infof(" Operator: %s", req.Operator)
-	logrus.Infof(" EdgeLocation: %s", req.EdgeLocation)
-	logrus.Infof(" ReleaseId: %s", req.ReleaseId)
-	logrus.Infof(" Source: %s", req.Source)
-	logrus.Infof(" Extra: %v", req.Extra)
+	logrus.Infof(" name: %s", req.Name)
+	logrus.Infof(" operator: %s", req.Operator)
+	logrus.Infof(" edgeLocation: %s", req.EdgeLocation)
+	logrus.Infof(" releaseId: %s", req.ReleaseId)
+	logrus.Infof(" source: %s", req.Source)
+	logrus.Infof(" extra: %v", req.Extra)
 	log.AddLineDelimiter(" ")
 }
 
@@ -94,7 +94,7 @@ func (d *dice) Deploy(deployReq *deployRequest, conf *conf) (*DeployResult, erro
 	}, 5, time.Second*3)
 
 	if err != nil {
-		logrus.Errorf("deploy to dice failed! response err: %v.", err)
+		logrus.Errorf("deploy to dice failed! response err: %v", err)
 		return nil, err
 	}
 
@@ -135,10 +135,24 @@ func (r *R) Print() {
 		}
 	}
 	if r.Data.Runtime != nil {
-		logrus.Infof(" runtime: %+v", r.Data.Runtime)
+		b, err := json.MarshalIndent(r.Data.Runtime, "", " ")
+		if err != nil {
+			logrus.Errorf("fail to json marshal: err: %v", err)
+		}
+		logrus.Infof(" runtime: %s", string(b))
+	}
+	if r.Err.Code != "" {
+		logrus.Infof(" err code: %s", r.Err.Code)
+	}
+	if r.Err.Message != "" {
+		logrus.Infof(" err message: %s", r.Err.Message)
+	}
+	if r.Err.Ctx != nil {
+		for k, v := range r.Err.Ctx {
+			logrus.Infof(" err ctx %s: %v", k, v)
+		}
 	}
 
-	logrus.Infof(" err: %+v", r.Err)
 	log.AddLineDelimiter(" ")
 }
 
